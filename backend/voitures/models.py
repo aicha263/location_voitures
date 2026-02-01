@@ -7,11 +7,19 @@ class Voiture(models.Model):
         ('maintenance', 'Maintenance'),
     ]
 
+    matricule = models.CharField(max_length=20, unique=True)
     marque = models.CharField(max_length=100)
     modele = models.CharField(max_length=100)
-    prix_jour = models.DecimalField(max_digits=8, decimal_places=2)
+
+    prix_jour = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
     kilometrage = models.IntegerField()
     statut = models.CharField(max_length=20, choices=STATUS_CHOICES)
 
     def __str__(self):
-        return f"{self.marque} {self.modele}"
+        return f"{self.matricule} {self.marque}"

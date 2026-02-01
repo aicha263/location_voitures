@@ -18,3 +18,22 @@
   height: 48px;
   border-radius: 12px;
 }
+
+.form-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.btn-save {
+  flex: 1;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}

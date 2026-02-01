@@ -58,6 +58,7 @@ function Voitures() {
           <table className="table table-hover align-middle mb-0">
             <thead className="table-light">
               <tr>
+                <th>Matricule</th>
                 <th>Marque</th>
                 <th>Modèle</th>
                 <th>Prix / jour</th>
@@ -70,9 +71,14 @@ function Voitures() {
             <tbody>
               {voitures.map((v) => (
                 <tr key={v.id}>
+                  <td>{v.matricule}</td>
                   <td>{v.marque}</td>
                   <td>{v.modele}</td>
-                  <td>{v.prix_jour}</td>
+                  <td>
+                    {v.statut === "maintenance" || v.prix_jour === null
+                      ? "—"
+                      : `${v.prix_jour}`}
+                  </td>
                   <td>{v.kilometrage}</td>
 
                   {/* ✅ Statut avec Badge */}

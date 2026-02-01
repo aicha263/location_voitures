@@ -7,13 +7,15 @@ import {
   FaTag,
   FaMoneyBillWave,
   FaRoad,
-  FaPlus,
+  FaSave, 
+  FaTimes
 } from "react-icons/fa";
 
 function AjouterVoiture() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
+    matricule: "",
     marque: "",
     modele: "",
     prix_jour: "",
@@ -28,16 +30,22 @@ function AjouterVoiture() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    await fetch("http://127.0.0.1:8000/api/voitures/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-
-    navigate("/voitures");
+  const dataToSend = {
+    ...form,
+    prix_jour:
+      form.statut === "maintenance" ? null : form.prix_jour,
   };
+
+  await fetch("http://127.0.0.1:8000/api/voitures/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dataToSend),
+  });
+
+  navigate("/voitures");
+};
 
   return (
     <form onSubmit={handleSubmit} className="form-card">
@@ -46,6 +54,22 @@ function AjouterVoiture() {
         Remplissez les informations de la voiture
       </p>
 
+      {/* Matricule */}
+      <div className="input-group-custom">
+        <label>Matricule</label>
+        <div className="input-group">
+          <span className="input-group-text input-icon">
+            <FaCar />
+          </span>
+          <input
+            className="form-control"
+            name="matricule"
+            value={form.matricule}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+      
       {/* Marque */}
       <div className="input-group-custom">
         <label>Marque</label>
@@ -56,7 +80,6 @@ function AjouterVoiture() {
           <input
             className="form-control"
             name="marque"
-            placeholder="Ex: Toyota"
             value={form.marque}
             onChange={handleChange}
           />
@@ -73,26 +96,7 @@ function AjouterVoiture() {
           <input
             className="form-control"
             name="modele"
-            placeholder="Ex: Corolla"
             value={form.modele}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-
-      {/* Prix */}
-      <div className="input-group-custom">
-        <label>Prix / jour</label>
-        <div className="input-group">
-          <span className="input-group-text input-icon">
-            <FaMoneyBillWave />
-          </span>
-          <input
-            type="number"
-            className="form-control"
-            name="prix_jour"
-            placeholder="Ex: 5000"
-            value={form.prix_jour}
             onChange={handleChange}
           />
         </div>
@@ -109,7 +113,6 @@ function AjouterVoiture() {
             type="number"
             className="form-control"
             name="kilometrage"
-            placeholder="Ex: 120000"
             value={form.kilometrage}
             onChange={handleChange}
           />
@@ -130,10 +133,40 @@ function AjouterVoiture() {
           <option value="louee">Louée</option>
         </select>
       </div>
+      
+      {/* Prix */}
+      {(form.statut === "disponible" || form.statut === "louee") && (
+        <div className="input-group-custom">
+          <label>Prix / jour</label>
+          <div className="input-group">
+            <span className="input-group-text input-icon">
+              <FaMoneyBillWave />
+            </span>
+            <input
+              type="number"
+              className="form-control"
+              name="prix_jour"
+              value={form.prix_jour}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+      )}
 
-      <button className="btn btn-success btn-submit">
-        <FaPlus /> Ajouter la voiture
-      </button>
+      <br></br>
+      <div className="form-actions">
+        <button className="btn-save">
+          <FaSave /> Enregistrer
+        </button>
+        <button
+          type="button"
+          className="btn-cancel"
+          onClick={() => navigate("/voitures")}
+        >
+          <FaTimes /> Annuler
+        </button>
+      </div>
     </form>
   );
 }

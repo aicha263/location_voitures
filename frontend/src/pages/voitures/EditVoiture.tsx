@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { Voiture } from "../../types/Voiture";
 import "./EditVoiture.css";
-
+import {
+  FaSave, 
+  FaTimes
+} from "react-icons/fa";
 
 function EditVoiture() {
   const { id } = useParams<{ id: string }>();
@@ -19,9 +22,10 @@ function EditVoiture() {
       .then((data) => {
       setForm({
         id: data.id,
+        matricule: data.matricule || "",
         marque: data.marque || "",
         modele: data.modele || "",
-        prix_jour: Number(data.prix_jour ?? 0),
+        prix_jour: data.prix_jour,
         kilometrage: Number(data.kilometrage ?? 0),
         statut: data.statut || "disponible",
       });
@@ -37,29 +41,45 @@ function EditVoiture() {
 
     const { name, value } = e.target;
 
-    setForm({
-      ...form,
-      [name]:
-        name === "kilometrage"
-          ? Number(value)
-          : value,
-    });
+    setForm((prev) =>
+      prev
+        ? {
+            ...prev,
+            [name]:
+              name === "kilometrage"
+                ? Number(value)
+                : value,
+            ...(name === "statut" && value === "maintenance"
+              ? { prix_jour: null }
+              : {}),
+          }
+        : prev
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form) return;
+  e.preventDefault();
+  if (!form) return;
 
-    setSaving(true);
+  setSaving(true);
 
-    await fetch(`http://127.0.0.1:8000/api/voitures/${id}/`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-
-    navigate("/voitures");
+  const dataToSend = {
+    ...form,
+    prix_jour:
+      form.statut === "maintenance"
+        ? null
+        : form.prix_jour,
   };
+
+  await fetch(`http://127.0.0.1:8000/api/voitures/${id}/`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dataToSend),
+  });
+
+  navigate("/voitures");
+};
+
 
   // ⏳ تحميل
   if (loading) return <p>Chargement...</p>;
@@ -67,67 +87,75 @@ function EditVoiture() {
 
   // ✅ الفورم لا يُرسم إلا بعد وجود البيانات
   return (
-    <>
-      <h2 className="mb-4">✏️ Modifier la voiture</h2>
+    <div className="edit-page">
+      <div className="edit-card">
+        <h2 className="edit-title">
+          ✏️ Modifier la voiture
+        </h2>
 
-      <form onSubmit={handleSubmit} className="card p-4" style={{ maxWidth: 500 }}>
-        <input
-          className="form-control mb-3"
-          name="marque"
-          value={form.marque ?? ""}
-          onChange={handleChange}
-        />
+        <form onSubmit={handleSubmit} className="edit-form">
+        
+          <div className="form-row">
+            <div className="form-group">
+              <label>Kilométrage</label>
+              <input
+                type="number"
+                className="form-input"
+                name="kilometrage"
+                value={form.kilometrage}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
 
-        <input
-          className="form-control mb-3"
-          name="modele"
-          value={form.modele ?? ""}
-          onChange={handleChange}
-        />
+          <div className="form-group">
+            <label>Statut</label>
+            <select
+              className="form-input"
+              name="statut"
+              value={form.statut}
+              onChange={handleChange}
+            >
+              <option value="disponible">Disponible</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="louee">Louée</option>
+            </select>
+          </div>
 
-        <input
-          type="number"
-          className="form-control mb-3"
-          name="prix_jour"
-          value={form.prix_jour ?? ""}
-          onChange={handleChange}
-        />
+          {(form.statut === "disponible" || form.statut === "louee") && (
+            <div className="form-group">
+              <label>Prix / jour</label>
+              <input
+                type="number"
+                className="form-input"
+                name="prix_jour"
+                value={form.prix_jour ?? ""}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
 
-        <input
-          type="number"
-          className="form-control mb-3"
-          name="kilometrage"
-          value={form.kilometrage ?? ""}
-          onChange={handleChange}
-        />
+          <div className="form-actions">
+            <button className="btn-save" disabled={saving}>
+              <FaSave style={{ marginRight: 8 }} />
+              {saving ? "⏳ Enregistrement..." : " Enregistrer"}
+            </button>
+            
+            <button
+              type="button"
+              className="btn-cancel"
+              onClick={() => navigate("/voitures")}
+            >
+              <FaTimes /> Annuler
+            </button>
+          </div>
+        </form>
 
-        <select
-          className="form-select mb-4"
-          name="statut"
-          value={form.statut}
-          onChange={handleChange}
-        >
-          <option value="disponible">Disponible</option>
-          <option value="maintenance">Maintenance</option>
-          <option value="louee">Louée</option>
-        </select>
-
-        <div className="d-flex gap-2">
-          <button className="btn btn-success" disabled={saving}>
-            {saving ? "Enregistrement..." : "Enregistrer"}
-          </button>
-
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={() => navigate("/voitures")}
-          >
-            Annuler
-          </button>
-        </div>
-      </form>
-    </>
+      </div>
+    </div>
   );
+
 }
 
 export default EditVoiture;
