@@ -130,7 +130,6 @@ function AjouterVoiture() {
         >
           <option value="disponible">Disponible</option>
           <option value="maintenance">Maintenance</option>
-          <option value="louee">Louée</option>
         </select>
       </div>
       

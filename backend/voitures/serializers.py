@@ -20,8 +20,8 @@ class VoitureSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
-        statut = data.get("statut")
-        prix = data.get("prix_jour")
+        statut = data.get("statut", self.instance.statut if self.instance else None)
+        prix = data.get("prix_jour", self.instance.prix_jour if self.instance else None)
 
         if statut == "maintenance":
             data["prix_jour"] = None
@@ -32,3 +32,18 @@ class VoitureSerializer(serializers.ModelSerializer):
             )
 
         return data
+
+    def validate_statutA(self, value):
+        if self.instance is None and value == "louee":
+            raise serializers.ValidationError(
+                "Impossible de créer une voiture déjà louée."
+            )
+        return value
+    
+    def validate_statutM(self, value):
+        if value == "louee":
+            raise serializers.ValidationError(
+                "Le statut 'louee' est géré automatiquement par les réservations."
+            )
+        return value
+

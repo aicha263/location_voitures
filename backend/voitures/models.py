@@ -19,7 +19,7 @@ class Voiture(models.Model):
     )
 
     kilometrage = models.IntegerField()
-    statut = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    statut = models.CharField(max_length=20, choices=STATUS_CHOICES, default="disponible")
 
     def __str__(self):
         return f"{self.matricule} {self.marque}"

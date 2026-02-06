@@ -1,0 +1,57 @@
+.create-reservation-page {
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+}
+
+.form-card {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    width: 500px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.reservation-form input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+}
+
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    width: 50%;
+    font-weight: 500;   
+}
+
+.btn-cancel {
+    background: #ef4444;
+    color: white;
+    border: none;
+    margin: 10px;
+    padding: 13px;
+    width: 50%;  
+    height: 50%;
+    border-radius: 8px;
+} 

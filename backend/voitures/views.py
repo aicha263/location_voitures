@@ -1,38 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.timezone import now
+from reservations.models import Reservation
 from .models import Voiture
-from .forms import VoitureForm
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import VoitureSerializer
-
-
-# def voiture_list(request):
-#     voitures = Voiture.objects.all()
-#     return render(request, 'voitures/voiture_list.html', {'voitures': voitures})
-
-# def voiture_create(request):
-#     form = VoitureForm(request.POST or None)
-#     if form.is_valid():
-#         form.save()
-#         return redirect('voiture_list')
-#     return render(request, 'voitures/voiture_form.html', {'form': form})
-
-# def voiture_update(request, pk):
-#     voiture = get_object_or_404(Voiture, pk=pk)
-#     form = VoitureForm(request.POST or None, instance=voiture)
-#     if form.is_valid():
-#         form.save()
-#         return redirect('voiture_list')
-#     return render(request, 'voitures/voiture_form.html', {'form': form})
-
-# def voiture_delete(request, pk):
-#     voiture = get_object_or_404(Voiture, pk=pk)
-#     if request.method == 'POST':
-#         voiture.delete()
-#         return redirect('voiture_list')
-#     return render(request, 'voitures/voiture_delete.html', {'voiture': voiture})
 
 
 @api_view(['GET', 'POST'])
@@ -68,3 +41,18 @@ def voiture_detail_api(request, pk):
     if request.method == 'DELETE':
         voiture.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET', 'POST'])
+def voiture_list_api(request):
+    if request.method == 'GET':
+        current_time = now()
+
+        for r in Reservation.objects.all():
+            if r.date_fin <= current_time:
+                voiture = r.voiture
+                voiture.statut = "disponible"
+                voiture.save()
+
+        voitures = Voiture.objects.all()
+        serializer = VoitureSerializer(voitures, many=True)
+        return Response(serializer.data)

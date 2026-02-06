@@ -15,7 +15,6 @@ function EditVoiture() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // 🔹 جلب البيانات الحقيقية فقط
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/api/voitures/${id}/`)
       .then((res) => res.json())
@@ -81,11 +80,9 @@ function EditVoiture() {
 };
 
 
-  // ⏳ تحميل
   if (loading) return <p>Chargement...</p>;
   if (!form) return <p>Voiture introuvable</p>;
 
-  // ✅ الفورم لا يُرسم إلا بعد وجود البيانات
   return (
     <div className="edit-page">
       <div className="edit-card">
@@ -118,7 +115,6 @@ function EditVoiture() {
             >
               <option value="disponible">Disponible</option>
               <option value="maintenance">Maintenance</option>
-              <option value="louee">Louée</option>
             </select>
           </div>
 
