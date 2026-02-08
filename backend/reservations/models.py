@@ -10,6 +10,7 @@ class Reservation(models.Model):
         related_name="reservations"
     )
 
+    nni = models.CharField(max_length=10, blank=True, null=True)
     nom_client = models.CharField(max_length=100)
     telephone = models.CharField(max_length=20)
 
@@ -26,13 +27,31 @@ class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def clean(self):
-        # vérifier les dates
+        # Vérifier si une voiture est sélectionnée
+        if self.voiture is None:
+            raise ValidationError("La voiture doit être sélectionnée.")
+
+        # Vérifier disponibilité
+        if self.voiture.statut != 'disponible' and not self.pk:
+            raise ValidationError("Cette voiture n'est pas disponible.")
+
+        # Vérifier dates
         if self.date_fin < self.date_debut:
             raise ValidationError("La date de fin doit être après la date de début.")
 
-        # vérifier disponibilité voiture
-        if self.voiture.statut != 'disponible' and not self.pk:
-            raise ValidationError("Cette voiture n'est pas disponible.")
+        # Vérifier chevauchement avec d'autres réservations
+        if self.__class__.objects.filter(
+            voiture=self.voiture,
+            date_fin__gte=self.date_debut,
+            date_debut__lte=self.date_fin
+        ).exclude(pk=self.pk).exists():
+            raise ValidationError("Cette voiture est déjà réservée sur cette période.")
+        
+
+
+
+
+
 
     def save(self, *args, **kwargs):
         self.clean()

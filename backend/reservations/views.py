@@ -35,13 +35,13 @@ def reservation_list_api(request):
         if serializer.is_valid():
             reservation = serializer.save()
 
-            voiture = reservation.voiture
-            voiture.statut = "louee"
-            voiture.save()
+            '''voiture = reservation.voiture
+                      voiture.statut = "louee"
+                       voiture.save()'''
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -69,3 +69,6 @@ def reservation_detail_api(request, pk):
         voiture.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+    

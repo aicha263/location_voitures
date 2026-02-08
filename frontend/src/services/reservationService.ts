@@ -1,9 +1,9 @@
-import type { Reservation } from "../types/Reservation";
+import type { Reservation, ReservationCreate } from "../types/Reservation";
 
 const API_URL = "http://127.0.0.1:8000/api/reservations/";
 
 export async function createReservation(
-  reservation: Reservation
+  reservation: ReservationCreate
 ): Promise<Reservation> {
   const res = await fetch(API_URL, {
     method: "POST",
@@ -71,4 +71,5 @@ export async function deleteReservation(id: number): Promise<void> {
     throw new Error("Erreur lors de la suppression");
   }
 }
+
 

@@ -1,40 +1,57 @@
+/* CONTENEUR PRINCIPAL */
 .create-reservation-page {
     display: flex;
     justify-content: center;
     padding: 30px;
+    background-color: #f9fafb;
+    /* fond clair pour la page */
 }
 
+/* CARTE DU FORMULAIRE */
 .form-card {
     background: white;
-    padding: 25px;
+    padding: 25px 30px;
     border-radius: 14px;
     width: 500px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-.reservation-form input {
+/* CHAMPS DU FORMULAIRE */
+.reservation-form input,
+.reservation-form select {
     width: 100%;
     padding: 10px;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
+    font-size: 14px;
+    transition: border 0.2s;
 }
 
+.reservation-form input:focus,
+.reservation-form select:focus {
+    border-color: #2563eb;
+    outline: none;
+}
+
+/* MARGIN ENTRE LES GROUPES */
 .form-group {
     margin-bottom: 16px;
 }
 
+/* RANGÉE DE CHAMPS CÔTE À CÔTE */
 .form-row {
     display: flex;
     gap: 10px;
 }
 
-
+/* ACTIONS (BOUTONS) */
 .form-actions {
     display: flex;
     gap: 12px;
     margin-top: 20px;
 }
 
+/* BOUTON RÉSERVER */
 .btn-submit {
     background: linear-gradient(135deg, #2563eb, #1e40af);
     color: white;
@@ -42,16 +59,31 @@
     padding: 12px;
     border-radius: 10px;
     width: 50%;
-    font-weight: 500;   
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
+.btn-submit:hover {
+    background: linear-gradient(135deg, #1e40af, #1e3a8a);
+}
+
+/* BOUTON ANNULER */
 .btn-cancel {
-    background: #ef4444;
+    background-color: #6c757d;
     color: white;
     border: none;
-    margin: 10px;
-    padding: 13px;
-    width: 50%;  
-    height: 50%;
-    border-radius: 8px;
-} 
+    padding: 12px;
+    border-radius: 10px;
+    width: 50%;
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
+    /* légèrement plus foncé au survol */
+}

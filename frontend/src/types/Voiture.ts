@@ -6,4 +6,5 @@ export type Voiture = {
   prix_jour: number | null;
   kilometrage: number;
   statut: string;
+
 };
