@@ -7,9 +7,7 @@ export async function createReservation(
 ): Promise<Reservation> {
   const res = await fetch(API_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(reservation),
   });
 
@@ -19,7 +17,6 @@ export async function createReservation(
 
   return res.json();
 }
-
 
 export async function getReservations(): Promise<Reservation[]> {
   const res = await fetch(API_URL);
@@ -31,15 +28,14 @@ export async function getReservations(): Promise<Reservation[]> {
   return res.json();
 }
 
+/* ✅ ICI LA CORRECTION IMPORTANTE */
 export async function updateReservation(
   id: number,
-  reservation: Reservation
+  reservation: ReservationCreate   // ✅ PAS Reservation
 ): Promise<Reservation> {
   const res = await fetch(`${API_URL}${id}/`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(reservation),
   });
 
@@ -53,8 +49,6 @@ export async function updateReservation(
 export async function getReservation(id: number): Promise<Reservation> {
   const res = await fetch(`${API_URL}${id}/`);
 
-  console.log("STATUS:", res.status);
-
   if (!res.ok) {
     throw new Error("Erreur lors du chargement");
   }
@@ -63,13 +57,9 @@ export async function getReservation(id: number): Promise<Reservation> {
 }
 
 export async function deleteReservation(id: number): Promise<void> {
-  const res = await fetch(`${API_URL}${id}/`, {
-    method: "DELETE",
-  });
+  const res = await fetch(`${API_URL}${id}/`, { method: "DELETE" });
 
   if (!res.ok) {
     throw new Error("Erreur lors de la suppression");
   }
 }
-
-

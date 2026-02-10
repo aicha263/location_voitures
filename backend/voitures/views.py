@@ -11,6 +11,14 @@ from .serializers import VoitureSerializer
 @api_view(['GET', 'POST'])
 def voiture_list_api(request):
     if request.method == 'GET':
+        current_time = now()
+
+        for r in Reservation.objects.all():
+            if r.date_fin <= current_time:
+                voiture = r.voiture
+                voiture.statut = "disponible"
+                voiture.save()
+
         voitures = Voiture.objects.all()
         serializer = VoitureSerializer(voitures, many=True)
         return Response(serializer.data)
@@ -42,17 +50,3 @@ def voiture_detail_api(request, pk):
         voiture.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET', 'POST'])
-def voiture_list_api(request):
-    if request.method == 'GET':
-        current_time = now()
-
-        for r in Reservation.objects.all():
-            if r.date_fin <= current_time:
-                voiture = r.voiture
-                voiture.statut = "disponible"
-                voiture.save()
-
-        voitures = Voiture.objects.all()
-        serializer = VoitureSerializer(voitures, many=True)
-        return Response(serializer.data)
